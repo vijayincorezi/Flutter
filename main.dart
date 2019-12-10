@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-
-import './answer.dart';
+import "./quiz.dart";
+import "./result.dart";
 
 void main() {
   runApp(MyApp());
@@ -14,55 +13,79 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var _questionIndex = 0;
+ 
 
-  void _answerQuestion() {
+  final _questions = const [
+    {
+      'questionText': "What's your favourite color?",
+      "answers": [
+        {"text": "Black", "score": 1},
+        {"text": "White", "score": 10},
+        {"text": "Green", "score": 5},
+        {"text": "Blue", "score": 7}
+      ],
+    },
+    {
+      'questionText': "What's your best school grade?",
+      "answers": [
+        {"text": "1 st", "score": 10},
+        {"text": "2 nd", "score": 8},
+        {"text": "3 rd", "score": 5},
+        {"text": "4 th", "score": 3}
+      ],
+    },
+    {
+      'questionText': "What's your favourite Game?",
+      "answers": [
+        {"text": "Golf", "score": 10},
+        {"text": "VolleyBall", "score": 5},
+        {"text": "Cricket", "score": 3},
+        {"text": "FootBall", "score": 1}
+      ],
+    },
+    {
+      'questionText': "What's your Dream car?",
+      "answers": [
+        {"text": "Rolls-Royce", "score": 10},
+        {"text": "Bentley", "score": 5},
+        {"text": "Audi", "score": 3},
+        {"text": "Volkswagen", "score": 1}
+      ],
+    },
+  ];
+  var _questionIndex = 0;
+  var _totalScore=0;
+  void _answerQuestion(int score) {
+
+    _totalScore=_totalScore+score;
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
     // questionIndex=questionIndex+1;
 
     print(_questionIndex);
+
+    if (_questionIndex < _questions.length) {
+      print("We have more quesitons");
+    } else {
+      print("No more questions");
+    }
   }
 
   Widget build(BuildContext context) {
-    var question = [
-      {
-        'questionText': "What's your favourite color?",
-        "answers": ["Black", "White", "Blue", "Green"],
-      },
-      {
-        'questionText': "What's your best school grade?",
-        "answers": ["1 st", "2 nd", "3 rd", "4 rd"],
-      },
-      {
-        'questionText': "What's your favourite Game?",
-        "answers": ["FootBall", "Cricket", "VolleyBall", "Golf"],
-      },
-      {
-        'questionText': "What's your Dream car?",
-        "answers": ["Rolls-Royce", "Bentley", "Volkswagen", "Lincoln"],
-      },
-    ];
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              title: Text('Application'),
-            ),
-            body: Column(
-              children: [
-                Text(" "),
-                Text(" "),
-                Question(question[_questionIndex]['questionText']),
-                Text(" "),
-                Text(" "),
-                Text(" "),
-                Text(" "),
-                ...(question[_questionIndex]['answers'] as List<String>)
-                    .map((answer) {
-                  return Answer(_answerQuestion, answer);
-                }).toList()
-              ],
-            )));
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Application'),
+        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(),
+      ),
+    );
   }
 }
